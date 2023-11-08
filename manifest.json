@@ -1,0 +1,8 @@
+{
+  "domain": "voltalis",
+  "name": "Voltalis",
+  "documentation": "https://www.example.com",
+  "dependencies": [],
+  "codeowners": ["@dricoum"],
+  "requirements": ["httpx", "unidecode"]
+}
