@@ -2,9 +2,9 @@
   "domain": "voltalis",
   "name": "Voltalis",
   "config_flow": true,
-  "documentation": "https://www.example.com",
-  "version": "0.0.1",
+  "documentation": "https://github.com/devauxa/voltalis",
+  "version": "0.1.0",
   "dependencies": [],
-  "codeowners": ["@dricoum"],
+  "codeowners": ["@devauxa"],
   "requirements": ["httpx", "unidecode"]
 }

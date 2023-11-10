@@ -1,6 +1,8 @@
 # switch.py
+import time
 from homeassistant.components.switch import SwitchEntity
 from . import DOMAIN
+
 import logging
 
 _LOGGER = logging.getLogger(__name__)
@@ -14,18 +16,25 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
 
 class VoltalisSwitch(SwitchEntity):
     def __init__(self, voltalis, device):
+        self.last_update = 0
         self._voltalis = voltalis
         self._state = None
         self._device_id = device["csLinkId"]
         self._name = device["name"]
 
     @property
+    def icon(self):
+        if self.is_on:
+            return "mdi:radiator"
+        else:
+            return "mdi:radiator-off"
+    @property
     def unique_id(self):
         return f"voltalis_{self._device_id}"
 
     @property
     def name(self):
-        return f"Voltalis {self._name}[{self._device_id}]"
+        return f"Voltalis {self._name}[{self._device_id}] switch"
 
     @property
     def is_on(self):
@@ -40,7 +49,10 @@ class VoltalisSwitch(SwitchEntity):
         self._state = False
 
     async def async_update(self):
-        self._state = await self._voltalis.fetch_switch_device_status(self._device_id)
+        # Retourne les datas sauvegardé si nouveau call < 10 min
+        if self.last_update + 60 * 10 <= time.time():
+            self._state = await self._voltalis.fetch_switch_device_status(self._device_id)
+            self.last_update = time.time()
 
     @property
     def device_info(self):

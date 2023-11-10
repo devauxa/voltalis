@@ -1,4 +1,5 @@
 import httpx
+import time
 import json
 import os
 from unidecode import unidecode
@@ -44,6 +45,9 @@ class VoltalisConsumption:
         self.duration = duration
 
 class Voltalis:
+    last_update_consumption = 0
+    last_data_consumption = None
+
     def __init__(self, username, password):
         self.credentials = {
             "username": username,
@@ -140,9 +144,15 @@ class Voltalis:
             return response.json()
 
     async def fetch_immediate_consumption_in_kw(self):
+        # Retourne les datas sauvegardé si nouveau call < 10 min
+        if self.last_update_consumption + 60 * 10 >= time.time():
+            _LOGGER.debug(f"Fetch consumption from storage")
+            return self.last_data_consumption
+
         self.ensure_is_logged_in()
-        _LOGGER.debug(f"Fetch consumption")
+        _LOGGER.debug(f"Fetch consumption from voltalis")
         response = await self.api.get('/siteData/immediateConsumptionInkW.json')
         response.raise_for_status()  # Assurez-vous que la requête a réussi
-        return response.json()  # Retourne le résultat JSON
-
+        self.last_update_consumption = time.time()
+        self.last_data_consumption = response.json()
+        return self.last_data_consumption
