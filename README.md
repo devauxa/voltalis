@@ -1,5 +1,8 @@
 # Voltalis Integration for Home Assistant
 
+DEPRECATED : 
+Voltalis a stoppé l'utilisation de son api [`MyVoltalis`](https://classic.myvoltalis.com/).
+
 Cette intégration pour Home Assistant permet de contrôler et surveiller les appareils connectés via l'API "classic" de [`MyVoltalis`](https://classic.myvoltalis.com/).
 
 ## Fonctionnalités
